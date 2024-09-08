@@ -48,4 +48,19 @@ class User extends Authenticatable
     {
         return $this->hasMany(Lead::class);
     }
+
+    public function isAdmin()
+    {
+        return $this->role === 'admin';
+    }
+
+    public function isAuthenticated()
+    {
+        return $this->role === 'authenticated';
+    }
+
+    public function isGuest()
+    {
+        return $this->role === 'guest';
+    }
 }
