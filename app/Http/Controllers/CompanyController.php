@@ -7,9 +7,19 @@ use Illuminate\Http\Request;
 
 class CompanyController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $companies = Company::all();
+        $query = Company::query();
+
+        if ($request->has('status')) {
+            $status = filter_var($request->input('status'), FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
+            if ($status !== null) {
+                $query->where('status', $status);
+            }
+        }
+
+        $companies = $query->paginate($request->input('per_page', 15));
+
         return response()->json($companies);
     }
 

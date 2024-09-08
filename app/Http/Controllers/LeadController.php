@@ -7,9 +7,16 @@ use Illuminate\Http\Request;
 
 class LeadController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $leads = Lead::all();
+        $query = Lead::query();
+
+        if ($request->has('status')) {
+            $query->where('status', $request->input('status'));
+        }
+
+        $leads = $query->paginate($request->input('per_page', 15));
+
         return response()->json($leads);
     }
 

@@ -7,9 +7,20 @@ use Illuminate\Http\Request;
 
 class ContactController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $contacts = Contact::all();
+        $query = Contact::query();
+
+        if ($request->has('name')) {
+            $query->where('name', 'like', '%' . $request->input('name') . '%');
+        }
+
+        if ($request->has('email')) {
+            $query->where('email', 'like', '%' . $request->input('email') . '%');
+        }
+
+        $contacts = $query->paginate($request->input('per_page', 15));
+
         return response()->json($contacts);
     }
 

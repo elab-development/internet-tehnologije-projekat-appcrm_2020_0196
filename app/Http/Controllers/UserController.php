@@ -9,9 +9,16 @@ use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $users = User::all();
+        $query = User::query();
+
+        if ($request->has('role')) {
+            $query->where('role', $request->input('role'));
+        }
+
+        $users = $query->paginate($request->input('per_page', 15));
+
         return response()->json($users);
     }
 
