@@ -19,8 +19,9 @@ class CompanyFactory extends Factory
         return [
             'name' => $this->faker->company(),
             'industry' => $this->faker->randomElement([
-                'Technology', 'Healthcare', 'Finance', 'Retail', 'Education', 'Manufacturing',
+                'Technology', 'Healthcare', 'Finance', 'Retail', 'Education', 'Manufacturing'
             ]),
+            'active' => $this->faker->boolean,
         ];
     }
 }
