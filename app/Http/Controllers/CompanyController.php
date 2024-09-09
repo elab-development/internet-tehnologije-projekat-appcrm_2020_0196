@@ -9,16 +9,14 @@ class CompanyController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Company::query();
+        $status = $request->input('status', 1);
 
-        if ($request->has('status')) {
-            $status = filter_var($request->input('status'), FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
-            if ($status !== null) {
-                $query->where('status', $status);
-            }
-        }
+        $query = Company::where('active', $status);
 
-        $companies = $query->paginate($request->input('per_page', 15));
+        $perPage = $request->input('per_page', 10);
+        $page = $request->input('page', 1);
+
+        $companies = $query->paginate($perPage, ['*'], 'page', $page);
 
         return response()->json($companies);
     }
@@ -36,6 +34,8 @@ class CompanyController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
+            'active' => 'required|boolean',
+            'industry' => 'required|string|max:255',
         ]);
 
         $company = Company::create($validated);
@@ -51,6 +51,8 @@ class CompanyController extends Controller
 
         $validated = $request->validate([
             'name' => 'sometimes|required|string|max:255',
+            'active' => 'sometimes|required|boolean',
+            'industry' => 'sometimes|required|string|max:255',
         ]);
 
         $company->update($validated);

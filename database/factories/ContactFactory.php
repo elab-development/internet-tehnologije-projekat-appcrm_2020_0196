@@ -17,11 +17,11 @@ class ContactFactory extends Factory
      */
     public function definition(): array
     {
-        $fullName = $this->faker->name();
-        $email = strtolower(str_replace(' ', '.', $fullName)) . '@example.com';
+        $name = $this->faker->name();
+        $email = strtolower(str_replace(' ', '.', $name)) . '@example.com';
 
         return [
-            'full_name' => $fullName,
+            'full_name' => $name,
             'email' => $email,
             'company_id' => Company::factory(),
         ];

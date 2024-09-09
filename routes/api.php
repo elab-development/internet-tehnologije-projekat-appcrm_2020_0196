@@ -22,36 +22,16 @@ use App\Http\Controllers\CompanyController;
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 
-Route::get('/users', [UserController::class, 'index']);
-Route::get('/users/{id}', [UserController::class, 'show']);
-
-Route::get('/companies', [CompanyController::class, 'index']);
-Route::get('/companies/{id}', [CompanyController::class, 'show']);
-
-Route::get('/contacts', [ContactController::class, 'index']);
-Route::get('/contacts/{id}', [ContactController::class, 'show']);
-
-Route::get('/leads', [LeadController::class, 'index']);
-Route::get('/leads/{id}', [LeadController::class, 'show']);
-
-
 Route::middleware('auth:sanctum')->group(function () {
-    Route::post('/users', [UserController::class, 'store']);
-    Route::put('/users/{id}', [UserController::class, 'update']);
-
-    Route::post('/leads', [LeadController::class, 'store']);
-    Route::put('/leads/{id}', [LeadController::class, 'update']);
-
-    Route::post('/contacts', [ContactController::class, 'store']);
-    Route::put('/contacts/{id}', [ContactController::class, 'update']);
-
-    Route::post('/companies', [CompanyController::class, 'store']);
-    Route::put('/companies/{id}', [CompanyController::class, 'update']);
+    Route::resource('users', UserController::class)->except(['index', 'show']);
+    Route::resource('leads', LeadController::class)->except(['index', 'show']);
+    Route::resource('contacts', ContactController::class)->except(['index', 'show']);
+    Route::resource('companies', CompanyController::class)->except(['index', 'show']);
 });
 
 Route::middleware(['auth:sanctum', 'role:admin'])->group(function () {
-    Route::delete('/users/{id}', [UserController::class, 'destroy']);
-    Route::delete('/companies/{id}', [CompanyController::class, 'destroy']);
-    Route::delete('/contacts/{id}', [ContactController::class, 'destroy']);
-    Route::delete('/leads/{id}', [LeadController::class, 'destroy']);
+    Route::resource('users', UserController::class)->only(['destroy']);
+    Route::resource('companies', CompanyController::class)->only(['destroy']);
+    Route::resource('contacts', ContactController::class)->only(['destroy']);
+    Route::resource('leads', LeadController::class)->only(['destroy']);
 });

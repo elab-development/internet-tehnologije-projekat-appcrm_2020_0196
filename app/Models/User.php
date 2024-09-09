@@ -18,10 +18,10 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
+        'full_name',
         'email',
+        'role',
         'password',
-        'role'
     ];
 
     /**
@@ -47,20 +47,5 @@ class User extends Authenticatable
     public function leads()
     {
         return $this->hasMany(Lead::class);
-    }
-
-    public function isAdmin()
-    {
-        return $this->role === 'admin';
-    }
-
-    public function isAuthenticated()
-    {
-        return $this->role === 'authenticated';
-    }
-
-    public function isGuest()
-    {
-        return $this->role === 'guest';
     }
 }

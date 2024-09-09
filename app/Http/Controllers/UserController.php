@@ -17,7 +17,7 @@ class UserController extends Controller
             $query->where('role', $request->input('role'));
         }
 
-        $users = $query->paginate($request->input('per_page', 15));
+        $users = $query->paginate($request->input('per_page', 10));
 
         return response()->json($users);
     }
@@ -35,8 +35,9 @@ class UserController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
+            'email' => 'required|email|unique:users,email',
             'password' => 'required|string|min:8',
+            'role' => 'required|in:admin,authenticated,guest',
         ]);
 
         $validated['password'] = Hash::make($validated['password']);
@@ -54,8 +55,9 @@ class UserController extends Controller
 
         $validated = $request->validate([
             'name' => 'sometimes|required|string|max:255',
-            'email' => 'sometimes|required|string|email|max:255|unique:users,email,' . $id,
+            'email' => 'sometimes|required|email|unique:users,email,' . $user->id,
             'password' => 'sometimes|required|string|min:8',
+            'role' => 'sometimes|required|in:admin,authenticated,guest',
         ]);
 
         if (isset($validated['password'])) {

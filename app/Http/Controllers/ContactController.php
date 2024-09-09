@@ -2,76 +2,52 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\ContactCollection;
 use App\Models\Contact;
+use App\Http\Resources\ContactResource;
 use Illuminate\Http\Request;
 
 class ContactController extends Controller
 {
-    public function index(Request $request)
+    public static $wrap = 'contact';
+    public function index()
     {
-        $query = Contact::query();
-
-        if ($request->has('name')) {
-            $query->where('name', 'like', '%' . $request->input('name') . '%');
-        }
-
-        if ($request->has('email')) {
-            $query->where('email', 'like', '%' . $request->input('email') . '%');
-        }
-
-        $contacts = $query->paginate($request->input('per_page', 15));
-
-        return response()->json($contacts);
+        $contacts = Contact::with('company')->get();
+        return new ContactCollection($contacts);
     }
 
-    public function show($id)
+    public function show(Contact $contact)
     {
-        $contact = Contact::find($id);
-        if (!$contact) {
-            return response()->json(['message' => 'Contact not found'], 404);
-        }
-        return response()->json($contact);
+        return new ContactResource($contact->load('company'));
     }
 
     public function store(Request $request)
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'user_id' => 'required|exists:users,id',
-            'lead_id' => 'required|exists:leads,id',
+            'email' => 'required|email|unique:contacts,email',
             'company_id' => 'required|exists:companies,id',
         ]);
 
         $contact = Contact::create($validated);
-        return response()->json($contact, 201);
+        return new ContactResource($contact);
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, Contact $contact)
     {
-        $contact = Contact::find($id);
-        if (!$contact) {
-            return response()->json(['message' => 'Contact not found'], 404);
-        }
-
         $validated = $request->validate([
             'name' => 'sometimes|required|string|max:255',
-            'user_id' => 'sometimes|required|exists:users,id',
-            'lead_id' => 'sometimes|required|exists:leads,id',
+            'email' => 'sometimes|required|email|unique:contacts,email,' . $contact->id,
             'company_id' => 'sometimes|required|exists:companies,id',
         ]);
 
         $contact->update($validated);
-        return response()->json($contact);
+        return new ContactResource($contact);
     }
 
-    public function destroy($id)
+    public function destroy(Contact $contact)
     {
-        $contact = Contact::find($id);
-        if (!$contact) {
-            return response()->json(['message' => 'Contact not found'], 404);
-        }
-
         $contact->delete();
-        return response()->json(['message' => 'Contact deleted']);
+        return response()->json(null, 204);
     }
 }
