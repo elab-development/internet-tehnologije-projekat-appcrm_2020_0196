@@ -7,6 +7,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\LeadController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\CompanyController;
+use App\Http\Controllers\DashboardController;
 
 /*
 |--------------------------------------------------------------------------
@@ -21,6 +22,18 @@ use App\Http\Controllers\CompanyController;
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
+Route::post('/logout', [AuthController::class, 'logout']);
+
+Route::get('/users', [UserController::class, 'index']);
+Route::get('/users/{id}', [UserController::class, 'show']);
+
+Route::get('/companies', [CompanyController::class, 'index']);
+Route::get('/companies/{id}', [CompanyController::class, 'show']);
+
+Route::resource('contacts', ContactController::class);
+
+Route::get('/leads', [LeadController::class, 'index']);
+Route::get('/leads/{id}', [LeadController::class, 'show']);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::resource('users', UserController::class)->except(['index', 'show']);
@@ -35,3 +48,5 @@ Route::middleware(['auth:sanctum', 'role:admin'])->group(function () {
     Route::resource('contacts', ContactController::class)->only(['destroy']);
     Route::resource('leads', LeadController::class)->only(['destroy']);
 });
+
+Route::middleware('auth:sanctum')->get('/dashboard-stats', [DashboardController::class, 'getStats']);

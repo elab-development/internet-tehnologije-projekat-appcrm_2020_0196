@@ -20,14 +20,3 @@ use App\Http\Controllers\CompanyController;
 Route::get('/', function () {
     return view('welcome');
 });
-
-Route::get('/users', [UserController::class, 'index']);
-Route::get('/users/{id}', [UserController::class, 'show']);
-
-Route::get('/companies', [CompanyController::class, 'index']);
-Route::get('/companies/{id}', [CompanyController::class, 'show']);
-
-Route::resource('contacts', ContactController::class);
-
-Route::get('/leads', [LeadController::class, 'index']);
-Route::get('/leads/{id}', [LeadController::class, 'show']);
