@@ -12,7 +12,8 @@ return new class extends Migration
     public function up()
     {
         Schema::table('companies', function (Blueprint $table) {
-            $table->boolean('active')->after('name');
+            $table->boolean('active')->default(0);
+            $table->timestamps();
         });
     }
 

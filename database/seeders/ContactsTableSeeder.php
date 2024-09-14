@@ -10,6 +10,6 @@ class ContactsTableSeeder extends Seeder
 {
     public function run(): void
     {
-        Contact::factory(5)->create();
+        //Contact::factory(5)->create();
     }
 }

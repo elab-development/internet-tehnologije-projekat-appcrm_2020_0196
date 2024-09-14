@@ -10,6 +10,6 @@ class CompaniesTableSeeder extends Seeder
 {
     public function run(): void
     {
-        Company::factory(5)->create();
+        //Company::factory(5)->create();
     }
 }

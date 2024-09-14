@@ -12,7 +12,7 @@ class ContactResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'name' => $this->full_name,
+            'full_name' => $this->full_name,
             'email' => $this->email,
             'company' => new CompanyResource($this->whenLoaded('company')),
         ];

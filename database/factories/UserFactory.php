@@ -23,15 +23,11 @@ class UserFactory extends Factory
      */
     public function definition(): array
     {
-        $name = $this->faker->name();
-        $email = strtolower(str_replace(' ', '.', $name)) . '@example.com';
-
         return [
-            'full_name' => $name,
-            'email' => $email,
+            'full_name' => fake()->name(),
+            'email' => fake()->unique()->safeEmail(),
             'email_verified_at' => now(),
-            'password' => static::$password ??= Hash::make('password'),
-            'role' => $this->faker->randomElement(['admin', 'authenticated', 'guest']),
+            'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',
             'remember_token' => Str::random(10),
         ];
     }

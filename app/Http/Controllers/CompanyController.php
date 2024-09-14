@@ -7,18 +7,10 @@ use Illuminate\Http\Request;
 
 class CompanyController extends Controller
 {
-    public function index(Request $request)
+    public function index()
     {
-        $status = $request->input('status', 1);
-
-        $query = Company::where('active', $status);
-
-        $perPage = $request->input('per_page', 10);
-        $page = $request->input('page', 1);
-
-        $companies = $query->paginate($perPage, ['*'], 'page', $page);
-
-        return response()->json($companies);
+        $transactions = Company::all();
+        return response()->json($transactions, 200);
     }
 
     public function show($id)
@@ -34,8 +26,8 @@ class CompanyController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'active' => 'required|boolean',
             'industry' => 'required|string|max:255',
+            'active' => 'required|boolean',
         ]);
 
         $company = Company::create($validated);
@@ -51,8 +43,8 @@ class CompanyController extends Controller
 
         $validated = $request->validate([
             'name' => 'sometimes|required|string|max:255',
-            'active' => 'sometimes|required|boolean',
             'industry' => 'sometimes|required|string|max:255',
+            'active' => 'sometimes|required|boolean',
         ]);
 
         $company->update($validated);

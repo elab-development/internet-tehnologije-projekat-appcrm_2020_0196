@@ -8,17 +8,10 @@ use Illuminate\Http\Request;
 
 class LeadController extends Controller
 {
-    public function index(Request $request)
+    public function index()
     {
-        $query = Lead::query();
-
-        if ($request->has('status')) {
-            $query->where('status', $request->input('status'));
-        }
-
-        $leads = $query->paginate($request->input('per_page', 5));
-
-        return response()->json($leads);
+        $transactions = Lead::all();
+        return response()->json($transactions, 200);
     }
 
     public function show($id)
@@ -70,5 +63,17 @@ class LeadController extends Controller
 
         $lead->delete();
         return response()->json(['message' => 'Lead deleted']);
+    }
+
+    public function getLeadsByUserId($userId)
+    {
+        $leads = Lead::where('user_id', $userId)->get();
+        return response()->json($leads, 200);
+    }
+
+    public function getLeadsByContactId($contactId)
+    {
+        $leads = Lead::where('contact_id', $contactId)->get();
+        return response()->json($leads, 200);
     }
 }

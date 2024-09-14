@@ -10,6 +10,6 @@ class LeadsTableSeeder extends Seeder
 {
     public function run(): void
     {
-        Lead::factory(5)->create();
+        // Lead::factory(5)->create();
     }
 }

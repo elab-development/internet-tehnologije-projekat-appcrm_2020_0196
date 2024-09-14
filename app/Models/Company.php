@@ -11,8 +11,8 @@ class Company extends Model
 
     protected $fillable = [
         'name',
-        'active',
-        'industry'
+        'industry',
+        'active'
     ];
 
     public function contacts()

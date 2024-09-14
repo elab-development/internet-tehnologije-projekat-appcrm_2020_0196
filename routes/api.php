@@ -20,33 +20,36 @@ use App\Http\Controllers\DashboardController;
 |
 */
 
-Route::post('/register', [AuthController::class, 'register']);
-Route::post('/login', [AuthController::class, 'login']);
-Route::post('/logout', [AuthController::class, 'logout']);
+Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+    return $request->user();
+});
 
-Route::get('/users', [UserController::class, 'index']);
-Route::get('/users/{id}', [UserController::class, 'show']);
+Route::post('register', [AuthController::class, 'register']);
+Route::post('login', [AuthController::class, 'login']);
+Route::post('logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
 
-Route::get('/companies', [CompanyController::class, 'index']);
-Route::get('/companies/{id}', [CompanyController::class, 'show']);
+/*Route::get('users', [UserController::class, 'index'])->middleware('auth:sanctum');
+Route::get('users/{id}', [UserController::class, 'show']);
+Route::post('users', [UserController::class, 'store'])->middleware('auth:sanctum');
+Route::put('users/{id}', [UserController::class, 'update'])->middleware('auth:sanctum');
+Route::delete('users/{id}', [UserController::class, 'destroy'])->middleware('auth:sanctum');*/
 
-Route::resource('contacts', ContactController::class);
-
-Route::get('/leads', [LeadController::class, 'index']);
-Route::get('/leads/{id}', [LeadController::class, 'show']);
+Route::get('companies', [CompanyController::class, 'index']);
+Route::get('companies/{id}', [CompanyController::class, 'show']);
+Route::post('companies', [CompanyController::class, 'store'])->middleware('auth:sanctum');
+Route::put('companies/{id}', [CompanyController::class, 'update'])->middleware('auth:sanctum');
+Route::delete('companies/{id}', [CompanyController::class, 'destroy'])->middleware('auth:sanctum');
 
 Route::middleware('auth:sanctum')->group(function () {
-    Route::resource('users', UserController::class)->except(['index', 'show']);
-    Route::resource('leads', LeadController::class)->except(['index', 'show']);
-    Route::resource('contacts', ContactController::class)->except(['index', 'show']);
-    Route::resource('companies', CompanyController::class)->except(['index', 'show']);
-});
 
-Route::middleware(['auth:sanctum', 'role:admin'])->group(function () {
-    Route::resource('users', UserController::class)->only(['destroy']);
-    Route::resource('companies', CompanyController::class)->only(['destroy']);
-    Route::resource('contacts', ContactController::class)->only(['destroy']);
-    Route::resource('leads', LeadController::class)->only(['destroy']);
-});
+    Route::get('users', [AuthController::class, 'index']);
 
-Route::middleware('auth:sanctum')->get('/dashboard-stats', [DashboardController::class, 'getStats']);
+    Route::get('contacts', [ContactController::class, 'index']);
+    Route::get('contacts/{id}', [ContactController::class, 'show']);
+    Route::post('contacts', [ContactController::class, 'store']);
+    Route::put('contacts/{id}', [ContactController::class, 'update']);
+    Route::delete('contacts/{id}', [ContactController::class, 'destroy']);
+    Route::get('leads/user/{userId}', [LeadController::class, 'getLeadsByUserId']);
+    Route::get('leads/contact/{contactId}', [LeadController::class, 'getLeadsByContactId']);
+    Route::apiResource('leads', LeadController::class);
+});

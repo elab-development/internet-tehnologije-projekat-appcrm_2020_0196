@@ -12,7 +12,7 @@ return new class extends Migration
     public function up()
     {
         Schema::table('companies', function (Blueprint $table) {
-            $table->boolean('active')->default(true)->change();
+            $table->boolean('active')->default(1)->change();
         });
     }
 
